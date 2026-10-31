@@ -291,13 +291,13 @@
     </div>
   </div>
 
-  <!-- ==================== 管理者登入 (Google 帳號驗證 / 離線密碼) MODAL ==================== -->
+  <!-- ==================== 管理者登入 (Google 帳號驗證 / 管理密碼) MODAL ==================== -->
   <div id="adminLoginModal" class="admin-modal-overlay hidden">
     <div class="intro-modal-card" style="max-width: 440px; border: 3px solid #43a047; padding: 28px 24px;">
-      <div style="font-size: 52px; margin-bottom: 8px;">🔑</div>
-      <h2 class="section-title" style="color: #1b5e20; font-size: 22px; margin-bottom: 6px;">教師管理後台身分驗證</h2>
-      <p style="font-size: 14px; color: #555; margin-bottom: 20px;">
-        授權管理者 Google 帳號：<br><strong style="color: #1565c0; font-size: 15px;">johngerlee@gmail.com</strong>
+      <div style="font-size: 52px; margin-bottom: 8px;">🔐</div>
+      <h2 class="section-title" style="color: #1b5e20; font-size: 22px; margin-bottom: 8px;">教師管理後台身分驗證</h2>
+      <p style="font-size: 14px; color: #555; margin-bottom: 22px;">
+        本系統設有資安權限防護，僅授權指定管理者存取
       </p>
 
       <!-- Google 一鍵登入按鈕 -->
@@ -308,18 +308,18 @@
           <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/>
           <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/>
         </svg>
-        <span>使用 Google 帳號登入 (johngerlee@gmail.com)</span>
+        <span>使用 Google 授權帳號登入</span>
       </button>
 
       <div style="display:flex; align-items:center; gap:10px; margin: 18px 0; color:#888; font-size:13px;">
         <hr style="flex:1; border:none; border-top:1px solid #ddd;">
-        <span>或使用管理密碼 (離線備用)</span>
+        <span>或</span>
         <hr style="flex:1; border:none; border-top:1px solid #ddd;">
       </div>
 
       <!-- 密碼輸入表單 -->
       <form onsubmit="event.preventDefault(); adminPanel.loginWithPassword();" style="display:flex; flex-direction:column; gap:10px;">
-        <input type="password" id="adminPasswordInput" class="text-input" placeholder="請輸入管理密碼 (預設: sjps888)" style="font-size:15px; padding:10px 14px;" />
+        <input type="password" id="adminPasswordInput" class="text-input" placeholder="請輸入管理密碼" style="font-size:15px; padding:10px 14px;" autocomplete="current-password" />
         <button type="submit" class="btn-primary" style="background:#455a64; font-size:15px; padding:10px;">
           🔑 密碼登入
         </button>

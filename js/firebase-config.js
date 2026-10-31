@@ -3,7 +3,17 @@
  * 專案名稱: blackgold2
  */
 
-const ADMIN_GOOGLE_EMAIL = "johngerlee@gmail.com";
+// 管理者身分雜湊特徵碼 (SHA-256)，嚴格保護個人信箱不直接暴露於公開前端程式碼
+const ADMIN_EMAIL_HASH = "01a93d7af3a4891ab7fb5aeff85347a92d9825b35ab423d2c53ed0cadf7625a7";
+
+// 安全單向雜湊運算函式
+async function computeSha256(str) {
+  if (!str) return '';
+  const buffer = new TextEncoder().encode(str.trim().toLowerCase());
+  const hashBuffer = await crypto.subtle.digest('SHA-256', buffer);
+  const hashArray = Array.from(new Uint8Array(hashBuffer));
+  return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+}
 
 // Firebase 專案配置 (請於 Firebase Console 建立專案 'blackgold2' 後將配置貼至此處)
 const firebaseConfig = { 
@@ -78,10 +88,11 @@ class FirebaseBridge {
     }
   }
 
-  // 驗證當前登入者是否為授權的 Google 管理者 (johngerlee@gmail.com)
-  isAdmin(user) {
+  // 驗證當前登入者是否具備管理者權限 (透過 SHA-256 特徵碼比對，保護隱私與資安)
+  async isAdmin(user) {
     if (!user || !user.email) return false;
-    return user.email.toLowerCase() === ADMIN_GOOGLE_EMAIL.toLowerCase();
+    const hash = await computeSha256(user.email);
+    return hash === ADMIN_EMAIL_HASH;
   }
 
   // 上傳單筆挑戰成績至 Firestore

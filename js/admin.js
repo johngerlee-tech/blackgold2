@@ -31,26 +31,27 @@ class AdminManager {
     if (modal) modal.classList.add('hidden');
   }
 
-  // Google 帳號身分驗證 (johngerlee@gmail.com)
+  // Google 帳號管理者身分驗證 (資安強化版本)
   async loginWithGoogle() {
     const fb = window.firebaseBridge;
     if (!fb || !fb.isInitialized) {
-      alert("【Firebase 尚未配置真實 API Key】\n\n您可依據專案根目錄的《FIREBASE_SETUP_GUIDE.md》指南至 Firebase Console 啟用專案並填寫 js/firebase-config.js。\n\n目前您可以直接點擊下方的「使用管理密碼」輸入 sjps888 快速進入後台！");
+      alert("【Firebase 尚未完成連線設定】\n\n請先依據設定指南啟用 Firebase，或直接使用管理密碼進行登入。");
       return;
     }
 
     try {
       const user = await fb.loginWithGoogle();
-      if (fb.isAdmin(user)) {
+      const isAuthorized = await fb.isAdmin(user);
+      if (isAuthorized) {
         this.isAuthenticated = true;
         this.adminUser = user;
         this.closeLoginModal();
         this.showAdminModal();
         this.updateAdminStatusUI();
-        alert(`🎉 歡迎管理員 ${user.displayName || ''} (${user.email})！已成功通過 Google 帳號身分驗證。`);
+        alert(`🎉 驗證成功！歡迎管理員 ${user.displayName || ''} 進入後台。`);
       } else {
         await fb.logout();
-        alert(`⛔ 存取遭拒！登入帳號為 ${user.email}，但系統僅授權 johngerlee@gmail.com 管理權限。`);
+        alert("⛔ 存取遭拒：此 Google 帳號未獲得本系統管理者授權。");
       }
     } catch (err) {
       if (err.code !== 'auth/popup-closed-by-user') {
@@ -59,19 +60,19 @@ class AdminManager {
     }
   }
 
-  // 離線備用密碼登入
+  // 管理密碼驗證
   loginWithPassword() {
     const pwdInput = document.getElementById('adminPasswordInput');
     const pwd = pwdInput ? pwdInput.value : '';
     if (pwd === this.adminPasscode) {
       this.isAuthenticated = true;
-      this.adminUser = { email: "johngerlee@gmail.com (離線密碼授權)", displayName: "李老師" };
+      this.adminUser = { email: "管理者 (密碼驗證)", displayName: "管理員" };
       this.closeLoginModal();
       this.showAdminModal();
       this.updateAdminStatusUI();
       if (pwdInput) pwdInput.value = '';
     } else {
-      alert("密碼不正確！預設密碼為 sjps888。");
+      alert("管理密碼錯誤，請重新輸入！");
     }
   }
 
