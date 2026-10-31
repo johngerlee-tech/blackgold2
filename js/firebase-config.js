@@ -1,19 +1,18 @@
 /**
  * Firebase 雲端資料庫與 Google 帳號身分驗證模組
  * 專案名稱: blackgold2
- * 指定綁定之管理者 Google 帳號: johngerlee@gmail.com
  */
 
 const ADMIN_GOOGLE_EMAIL = "johngerlee@gmail.com";
 
 // Firebase 專案配置 (請於 Firebase Console 建立專案 'blackgold2' 後將配置貼至此處)
-const firebaseConfig = {
-  apiKey: "AIzaSy_YOUR_API_KEY_HERE",
-  authDomain: "blackgold2.firebaseapp.com",
-  projectId: "blackgold2",
-  storageBucket: "blackgold2.appspot.com",
-  messagingSenderId: "123456789012",
-  appId: "1:123456789012:web:abcdef123456789"
+const firebaseConfig = { 
+  apiKey : "AIzaSyAf3KzDH1eH-g4wADF6ZQB0aYt5Ahg3L7I" , 
+  authDomain : "blackgold2-eb1a1.firebaseapp.com" , 
+  projectId : "blackgold2-eb1a1" , 
+  storageBucket : "blackgold2-eb1a1.firebasestorage.app" , 
+  messagingSenderId : "304164262299" , 
+  appId : "1:304164262299:web:1a416730fede2bdc5a113e" 
 };
 
 class FirebaseBridge {
