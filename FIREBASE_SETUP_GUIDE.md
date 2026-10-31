@@ -39,7 +39,7 @@
    - 預設已有 `localhost` 與 `blackgold2.firebaseapp.com`。
    - 點選 **「新增網域」**，輸入您的 GitHub Pages 網域：
      ```text
-     johngerlee.github.io
+     johngerlee-tech.github.io
      ```
    - 點選新增儲存。（此步驟極為關鍵，能確保學生在 GitHub 網頁遊玩或您在線上後台登入時不會被安全性阻擋）。
 
@@ -128,7 +128,7 @@ service cloud.firestore {
 ## 第五步：推送到 GitHub 儲存庫並啟用 GitHub Pages
 
 ### 1. 在 GitHub 建立儲存庫
-1. 開啟 [GitHub 網站](https://github.com/) 並登入您的帳號 `johngerlee`。
+1. 開啟 [GitHub 網站](https://github.com/) 並登入您的帳號 `johngerlee-tech`。
 2. 點選右上角 **「+」 ➔ 「New repository」**。
 3. **Repository name** 請輸入：`blackgold2`。
 4. 選擇 **Public**（公開），不要勾選「Initialize this repository with a README」（因為本地已有完整檔案）。
@@ -141,15 +141,10 @@ service cloud.firestore {
 # 進入 blackgold2 專案目錄
 cd "C:\Users\User\.gemini\antigravity\scratch\blackgold2"
 
-# 將所有檔案加入暫存區並提交初版
-git add .
-git commit -m "feat: complete blackgold2 RPG with 1366x768 zero-scroll, floating sprites, Iansui Zhuyin and Firebase integration"
-
-# 關聯至遠端 GitHub 儲存庫 (以您的帳號 johngerlee 為例)
-git remote add origin https://github.com/johngerlee/blackgold2.git
+# 設定遠端 GitHub 儲存庫為 johngerlee-tech
+git remote set-url origin https://github.com/johngerlee-tech/blackgold2.git
 
 # 推送至 main 分支
-git branch -M main
 git push -u origin main
 ```
 
@@ -160,7 +155,7 @@ git push -u origin main
 4. 在「Build and deployment」➔「Source」選擇 **「Deploy from a branch」**。
 5. Branch 選擇 **`main`**，資料夾選擇 **`/(root)`**，點選 **「Save」**。
 6. 約 1~2 分鐘後，即可在以下專屬網址暢玩與投影：
-   👉 **`https://johngerlee.github.io/blackgold2/`**
+   👉 **`https://johngerlee-tech.github.io/blackgold2/`**
 
 ---
 

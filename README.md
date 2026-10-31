@@ -114,7 +114,7 @@ blackgold2/
 1. 於 GitHub 建立名為 `blackgold2` 的儲存庫。
 2. 將本專案推送至 GitHub（指令見 [FIREBASE_SETUP_GUIDE.md](file:///C:/Users/User/.gemini/antigravity/scratch/blackgold2/FIREBASE_SETUP_GUIDE.md)）。
 3. 於 Settings ➔ Pages 啟用 `main` 分支。
-4. 網址即為：`https://johngerlee.github.io/blackgold2/`
+4. 網址即為：`https://johngerlee-tech.github.io/blackgold2/`
 
 ---
 © 2026 溪洲魔法生態學院 (SJPS) · 永續食物循環教育推廣
