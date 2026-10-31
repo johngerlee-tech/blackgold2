@@ -1,0 +1,628 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>黑金魔法術 🔮 永續食物循環系統 🔮 - RPG 冒險闖關與錯題檢討平台</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Iansui&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+  <!-- 全域頂部導航列 -->
+  <header class="global-navbar">
+    <div class="nav-container">
+      <div class="brand-logo">
+        <span class="brand-icon">🔮</span>
+        <div>
+          <div class="brand-title">黑金魔法術 · 永續食物循環</div>
+          <div class="brand-sub">溪洲魔法生態學院 ｜ 虛擬 RPG 闖關挑戰</div>
+        </div>
+      </div>
+      <div class="nav-controls">
+        <button class="btn-nav-tool" id="btnToggleZhuyin" onclick="toggleZhuyinClick()">🔤 注音: 開</button>
+        <button class="btn-nav-tool" id="btnToggleBgm" onclick="toggleBgmClick()">🎵 音樂: 開</button>
+        <button class="btn-nav-tool" id="btnToggleSound" onclick="toggleSoundClick()">🔊 音效: 開</button>
+        <button class="btn-nav-tool btn-nav-admin" onclick="adminPanel.open()">🔑 教師後台 (成績/錯題投影)</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- 主要內容區 -->
+  <main class="main-wrapper">
+
+    <!-- 1. 學生登入畫面 -->
+    <section id="loginScreen" class="game-screen login-card-panel">
+      <div class="login-magic-badge">🌱 食物循環魔法陣開啟</div>
+      <h1 class="login-headline">黑金魔法術🔮</h1>
+
+      <div class="story-intro-bubble">
+        <strong>🧙‍♂️ 溪洲魔法導師的話：</strong><br>
+        餐桌上的每一口美味，都來自大地的養分！剩下的廚餘不是垃圾，而是大自然中最珍貴的「黑色黃金」。
+        選取你的專屬 RPG 英雄角色，攜手通過三道連續魔法考驗，擊敗荒漠混沌怪，登上榮譽大廳！
+      </div>
+
+      <form id="loginForm" onsubmit="event.preventDefault(); submitLogin();">
+        <div class="field-group" style="margin-bottom: 16px;">
+          <label for="studentNameInput" id="lblStudentName">勇士姓名：</label>
+          <input type="text" id="studentNameInput" class="text-input" placeholder="請輸入姓名（例如：林小睿）" required autofocus />
+        </div>
+
+        <div class="input-row-grid">
+          <div class="field-group">
+            <label for="studentClassSelect" id="lblStudentClass">班級：</label>
+            <select id="studentClassSelect" class="text-input" style="font-family: inherit; font-size: 16px; cursor: pointer; background: #ffffff;">
+              <!-- 由 JS 動態注入班級選項 -->
+            </select>
+          </div>
+          <div class="field-group">
+            <label for="studentSeatInput" id="lblStudentSeat">座號：</label>
+            <input type="text" id="studentSeatInput" class="text-input" placeholder="例如：12號" value="1號" />
+          </div>
+        </div>
+
+        <button type="submit" class="btn-primary" id="btnLoginSubmit">
+          ✨ 進入英雄神殿，選擇出戰角色 ➔
+        </button>
+      </form>
+    </section>
+
+    <!-- 2. 英雄角色選取畫面 (至少 8 種英雄) -->
+    <section id="heroSelectScreen" class="game-screen hidden">
+      <div class="section-headline-box">
+        <h2 class="section-title" id="heroSelectHeadline">🧙‍♂️ 選取你的 RPG 守護英雄</h2>
+        <p class="section-desc" id="heroSelectSubline">8 位身懷絕技的大自然魔法使者，各具獨特屬性與被動天賦！</p>
+      </div>
+
+      <div class="hero-selection-layout">
+        <!-- 左側：8 位英雄選擇格 -->
+        <div class="heroes-grid" id="heroSelectGrid">
+          <!-- 由 JS 動態注入 8 種英雄 -->
+        </div>
+
+        <!-- 右側：當前選定英雄展示與屬性卡 -->
+        <aside class="hero-preview-sidebar" id="selectedHeroPreview">
+          <!-- 由 JS 動態注入選定英雄即時展演 -->
+        </aside>
+      </div>
+    </section>
+
+    <!-- 3. 關卡引導過場畫面 -->
+    <section id="stageIntroScreen" class="game-screen hidden">
+      <div class="intro-modal-card">
+        <div class="intro-monster-spotlight" id="introMonsterPreview">🌪️</div>
+        <div class="intro-monster-name" id="introMonsterName">荒漠混沌怪</div>
+        <h2 id="introStageTitle" class="section-title" style="margin-bottom: 8px;">第一關：黑金魔法術</h2>
+        <div id="introStageSubtitle" style="font-size: 18px; font-weight: 800; color: #558b2f; margin-bottom: 20px;">
+          土地到餐桌再到土地的循環七部曲！
+        </div>
+        <div class="intro-lore-box" id="introStageLore">
+          任務說明加載中...
+        </div>
+        <div style="font-size: 16px; font-weight: 900; color: #bf360c; margin-bottom: 24px;" id="introStageGoals">
+          🎯 達成目標
+        </div>
+        <button class="btn-primary" id="btnStartCombat" style="max-width: 320px; margin: 0 auto;" onclick="game.startStageGameplay()">
+          ⚔️ 拔劍迎戰，開始答題！
+        </button>
+      </div>
+    </section>
+
+    <!-- 4. 戰鬥答題進行畫面 (單螢幕無捲軸雙欄佈局：左側英雄與計時，右側對戰舞台與題目) -->
+    <section id="gameplayScreen" class="game-screen hidden battle-screen-container">
+      <div class="battle-compact-layout">
+
+        <!-- 左側資訊側欄 (Left Column) -->
+        <aside class="battle-left-col">
+          <!-- 冒險者與出戰英雄面板 -->
+          <div class="sidebar-card hero-status-card">
+            <div class="sidebar-hero-avatar-wrap" id="hudHeroAvatar"></div>
+            <div class="sidebar-hero-info">
+              <div class="sidebar-player-name" id="hudPlayerName">勇士載入中...</div>
+              <div class="sidebar-hero-name" id="hudHeroName">英雄 (Lv.1)</div>
+              <div class="sidebar-hero-class" id="hudPlayerClass">班級 座號</div>
+            </div>
+            <!-- 英雄血量條 -->
+            <div class="sidebar-hp-section">
+              <div class="hp-meta-row">
+                <span class="hp-label-hero">❤️ 英雄生命</span>
+                <span id="battleHeroHpText" style="font-weight:900;">100 / 100 HP</span>
+              </div>
+              <div class="battle-hp-bar hero-hp-bar">
+                <div class="hero-hp-fill" id="battleHeroHpFill" style="width: 100%;"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 關卡進度與題數卡片 -->
+          <div class="sidebar-card stage-info-card">
+            <div class="hud-stage-pill" id="hudStagePill">第 1 關：黑金魔法術</div>
+            <div class="hud-qcount-pill" id="qCountBadge">題目 1 / 5</div>
+          </div>
+
+          <!-- 倒數計時卡片 -->
+          <div class="sidebar-card timer-card">
+            <div class="timer-card-title">⏱️ 倒數計時</div>
+            <div class="timer-display-box">
+              <span class="timer-big-num" id="timerText">25s</span>
+            </div>
+            <div class="hud-timer-bar">
+              <div class="timer-fill" id="timerFill"></div>
+            </div>
+          </div>
+
+          <!-- 積分與連擊卡片 -->
+          <div class="sidebar-card score-stat-card">
+            <div class="hud-score-label">當前累積總積分</div>
+            <div class="hud-score-val" id="hudScoreVal">0</div>
+            <div class="hud-combo-val" id="hudComboVal"></div>
+          </div>
+        </aside>
+
+        <!-- 右側主要對戰與題目區 (Right Column) -->
+        <div class="battle-right-col">
+          <!-- 上半：精緻緊湊對峙舞台 (Compact Battle Arena) -->
+          <div class="battle-arena compact-arena">
+            <!-- 全景血光閃爍層 -->
+            <div class="blood-flash-overlay" id="bloodFlashOverlay"></div>
+
+            <div class="arena-stage-visual compact-stage-visual">
+              <!-- 左側：英雄角色出戰座 (DIV圖層懸浮不影響排版方塊高度) -->
+              <div class="hero-battle-pod compact-pod">
+                <div class="pod-header">
+                  <span class="pod-title-tag pod-hero-tag">出戰英雄</span>
+                  <span class="pod-name-text" id="podHeroNameTag">英雄</span>
+                </div>
+                <div class="pod-floating-stage">
+                  <div id="battleHeroVisual" class="floating-sprite-wrap">
+                    <!-- 英雄精靈戰鬥圖案 (懸浮圖層) -->
+                  </div>
+                </div>
+              </div>
+
+              <div class="vs-magic-divider compact-vs">⚔️ VS ⚔️</div>
+
+              <!-- 右側：關卡妖怪出戰座 (DIV圖層懸浮不影響排版方塊高度) -->
+              <div class="monster-battle-pod compact-pod">
+                <div class="pod-header">
+                  <span class="pod-title-tag pod-monster-tag">關卡領主</span>
+                  <span class="pod-name-text" id="podMonsterNameTag">荒漠混沌怪</span>
+                </div>
+                <div class="pod-floating-stage">
+                  <div id="battleMonsterVisual" class="floating-sprite-wrap">
+                    <!-- 怪物精靈戰鬥圖案 (懸浮圖層) -->
+                  </div>
+                </div>
+                <div class="battle-hp-block compact-hp-block">
+                  <div class="hp-meta-row">
+                    <span class="hp-label-monster">👿 領主生命</span>
+                    <span id="battleMonsterHpText" style="font-weight:900;">500 / 500 HP</span>
+                  </div>
+                  <div class="battle-hp-bar monster-hp-bar">
+                    <div class="monster-hp-fill" id="battleMonsterHpFill" style="width: 100%;"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 下半：題目與選項面板 (Compact Question Panel - 無需捲軸) -->
+          <div class="question-panel compact-q-panel">
+            <div class="question-stem-row">
+              <h3 class="question-stem compact-stem" id="questionStem">題目載入中...</h3>
+              <span id="answerFloatingBadge" class="answer-floating-badge hidden">答對了</span>
+            </div>
+
+            <div class="options-grid compact-options" id="questionOptionsContainer">
+              <!-- 由 JS 渲染 4 個選項按鈕 -->
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- 5. 終局華麗登場表揚網頁 (HALL OF FAME) -->
+    <section id="victoryHallScreen" class="game-screen hidden">
+      <!-- 煙火動畫畫布容器 -->
+      <div class="fireworks-overlay" id="fireworksCanvasContainer"></div>
+
+      <!-- 表揚大廳核心內容 -->
+      <div class="victory-hall-container" id="victoryHallContent">
+        <!-- 由 game.renderVictoryHall() 動態注入 -->
+      </div>
+    </section>
+
+  </main>
+
+  <!-- 單關通過提示 MODAL -->
+  <div id="stageClearModal" class="admin-modal-overlay hidden">
+    <div class="intro-modal-card" style="max-width: 500px;">
+      <div style="font-size: 60px;">🏆</div>
+      <h2 id="clearStageName" class="section-title">恭喜通過關卡！</h2>
+      <p id="clearStageScore" style="font-size: 20px; font-weight: 800; color: #ff8f00; margin: 16px 0;">+0 分</p>
+      <button class="btn-primary" id="nextStageBtn">
+        🚀 前往下一關挑戰！
+      </button>
+    </div>
+  </div>
+
+  <!-- 生命耗盡失敗 MODAL -->
+  <div id="gameOverModal" class="admin-modal-overlay hidden">
+    <div class="intro-modal-card" style="max-width: 500px;">
+      <div style="font-size: 60px;">💫</div>
+      <h2 class="section-title" style="color: #d32f2f;">生命值耗盡！</h2>
+      <p style="font-size: 16px; margin: 12px 0;">勇士別氣餒，大自然循環的奧秘需要反覆磨練！</p>
+      <div style="font-size: 18px; font-weight: 800; margin-bottom: 20px;">當前累積積分：<span id="gameOverScore">0</span></div>
+      <div style="display:flex; gap:12px; justify-content:center;">
+        <button class="btn-primary" style="background:#2e7d32;" onclick="game.retryCurrentStage()">
+          🔄 重新挑戰本關
+        </button>
+        <button class="btn-primary" style="background:#78909c;" onclick="game.start()">
+          🏠 返回首頁
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 關主未被打敗（討伐未果） MODAL -->
+  <div id="bossUndefeatedModal" class="admin-modal-overlay hidden">
+    <div class="intro-modal-card" style="max-width: 520px; border: 3px solid #ff9800;">
+      <div style="font-size: 60px;">🛡️</div>
+      <h2 class="section-title" style="color: #e65100;">⚔️ 關主尚未擊倒！</h2>
+      <p style="font-size: 16px; margin: 14px 0; line-height: 1.8;">
+        預備題組已作答完畢，但關卡領主尚有殘存生命：
+        <br><strong style="font-size: 22px; color: #d32f2f;" id="bossUndefeatedRemainHp">200 / 500 HP</strong>
+        <br>大自然永續考驗必須徹底淨化危機，請選擇下一步行動：
+      </p>
+      <div style="display:flex; flex-direction:column; gap:12px; margin-top:16px;">
+        <button class="btn-primary" style="background:#e65100; font-size:16px;" onclick="game.addExtraQuestions()">
+          🔥 調度追加題目支援（繼續攻擊直到擊倒！）
+        </button>
+        <button class="btn-primary" style="background:#2e7d32; font-size:16px;" onclick="game.retryCurrentStage()">
+          🔄 滿血重新挑戰本關
+        </button>
+        <button class="btn-primary" style="background:#78909c; font-size:16px;" onclick="game.returnHome()">
+          🏠 返回首頁重選英雄
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== 管理者登入 (Google 帳號驗證 / 離線密碼) MODAL ==================== -->
+  <div id="adminLoginModal" class="admin-modal-overlay hidden">
+    <div class="intro-modal-card" style="max-width: 440px; border: 3px solid #43a047; padding: 28px 24px;">
+      <div style="font-size: 52px; margin-bottom: 8px;">🔑</div>
+      <h2 class="section-title" style="color: #1b5e20; font-size: 22px; margin-bottom: 6px;">教師管理後台身分驗證</h2>
+      <p style="font-size: 14px; color: #555; margin-bottom: 20px;">
+        授權管理者 Google 帳號：<br><strong style="color: #1565c0; font-size: 15px;">johngerlee@gmail.com</strong>
+      </p>
+
+      <!-- Google 一鍵登入按鈕 -->
+      <button class="btn-google-auth" onclick="adminPanel.loginWithGoogle()">
+        <svg width="20" height="20" viewBox="0 0 24 24" style="flex-shrink:0;">
+          <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+          <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+          <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/>
+          <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/>
+        </svg>
+        <span>使用 Google 帳號登入 (johngerlee@gmail.com)</span>
+      </button>
+
+      <div style="display:flex; align-items:center; gap:10px; margin: 18px 0; color:#888; font-size:13px;">
+        <hr style="flex:1; border:none; border-top:1px solid #ddd;">
+        <span>或使用管理密碼 (離線備用)</span>
+        <hr style="flex:1; border:none; border-top:1px solid #ddd;">
+      </div>
+
+      <!-- 密碼輸入表單 -->
+      <form onsubmit="event.preventDefault(); adminPanel.loginWithPassword();" style="display:flex; flex-direction:column; gap:10px;">
+        <input type="password" id="adminPasswordInput" class="text-input" placeholder="請輸入管理密碼 (預設: sjps888)" style="font-size:15px; padding:10px 14px;" />
+        <button type="submit" class="btn-primary" style="background:#455a64; font-size:15px; padding:10px;">
+          🔑 密碼登入
+        </button>
+      </form>
+
+      <button style="margin-top:14px; background:none; border:none; color:#78909c; cursor:pointer; font-size:14px;" onclick="adminPanel.closeLoginModal()">
+        ✕ 取消返回
+      </button>
+    </div>
+  </div>
+
+  <!-- ==================== 管理者 / 教師後台 MODAL ==================== -->
+  <div id="adminModal" class="admin-modal-overlay hidden">
+    <div class="admin-window">
+      <div class="admin-window-header">
+        <div>
+          <h2>🛠️ 溪洲魔法生態學院 · 教師管理後台</h2>
+          <div id="adminUserStatusBadge" style="font-size: 13px; color: #81c784; margin-top: 2px;">
+            👤 管理者權限已驗證
+          </div>
+        </div>
+        <div style="display:flex; gap:10px; align-items:center;">
+          <button class="btn-nav-tool" onclick="adminPanel.logout()" style="background:#c62828; color:#fff; border-color:#ef5350; padding:6px 14px;">🚪 登出</button>
+          <button class="btn-close-admin" onclick="adminPanel.close()">✕</button>
+        </div>
+      </div>
+
+      <!-- 導覽分頁列 -->
+      <div class="admin-window-nav">
+        <button class="admin-nav-btn active" data-tab="recordsTab" onclick="adminPanel.switchTab('recordsTab')">
+          🏆 挑戰者積分與成績紀錄
+        </button>
+        <button class="admin-nav-btn" data-tab="reviewTab" onclick="adminPanel.switchTab('reviewTab')">
+          📽️ 錯題檢討投影簡報 (班級白板)
+        </button>
+        <button class="admin-nav-btn" data-tab="classesTab" onclick="adminPanel.switchTab('classesTab')">
+          🏫 班級清單設定與管理
+        </button>
+        <button class="admin-nav-btn" data-tab="settingsTab" onclick="adminPanel.switchTab('settingsTab')">
+          ⚙️ 遊戲規則與數值調校
+        </button>
+        <button class="admin-nav-btn" data-tab="heroesTab" onclick="adminPanel.switchTab('heroesTab')">
+          🧙‍♂️ 英雄角色圖片與文字更換
+        </button>
+        <button class="admin-nav-btn" data-tab="questionsTab" onclick="adminPanel.switchTab('questionsTab')">
+          📚 題庫管理與上傳更新
+        </button>
+      </div>
+
+      <!-- 內容區 -->
+      <div class="admin-window-body">
+        
+        <!-- 分頁 1: 挑戰者成績紀錄 -->
+        <div id="recordsTab" class="admin-tab-content">
+          <div class="admin-table-actions">
+            <div>
+              <label>篩選班級：
+                <select id="recordClassFilter" onchange="adminPanel.renderRecords()" class="text-input" style="width: auto; padding: 6px 12px; display:inline-block;">
+                  <option value="ALL">全部班級</option>
+                  <option value="六年一班">六年一班</option>
+                  <option value="六年二班">六年二班</option>
+                  <option value="六年三班">六年三班</option>
+                  <option value="溪洲魔法班">溪洲魔法班</option>
+                </select>
+              </label>
+            </div>
+            <div style="display: flex; gap: 8px;">
+              <button class="btn-nav-tool" onclick="adminPanel.syncRecordsFromFirebase()">☁️ 雲端同步 (Firebase)</button>
+              <button class="btn-nav-tool" onclick="adminPanel.exportRecordsCsv()">📥 匯出 CSV 報表 (Excel)</button>
+              <button class="btn-nav-tool" onclick="adminPanel.generateSampleData()">🎲 注入示範數據</button>
+              <button class="btn-nav-tool" style="color:#c62828;" onclick="adminPanel.clearRecords()">🗑️ 清空成績</button>
+            </div>
+          </div>
+
+          <div style="overflow-x: auto;">
+            <table class="admin-data-table">
+              <thead>
+                <tr>
+                  <th>名次</th>
+                  <th>作答時間</th>
+                  <th>班級/座號</th>
+                  <th>學生姓名</th>
+                  <th>出戰英雄</th>
+                  <th>總積分</th>
+                  <th>三關得分</th>
+                  <th>準確率</th>
+                  <th>最高連擊</th>
+                  <th>答錯題數</th>
+                </tr>
+              </thead>
+              <tbody id="recordsTableBody">
+                <!-- 由 JS 渲染 -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- 分頁 2: 投影簡報錯題檢討 (🌟 HIGHLIGHT) -->
+        <div id="reviewTab" class="admin-tab-content hidden">
+          <div id="reviewSummaryContainer">
+            <!-- 由 adminPanel.renderReviewSummary() 渲染 -->
+          </div>
+        </div>
+
+        <!-- 分頁: 班級清單設定與管理 (🌟 新增功能) -->
+        <div id="classesTab" class="admin-tab-content hidden">
+          <div class="admin-classes-header" style="margin-bottom: 20px;">
+            <h3 style="color: #1b5e20; margin-bottom: 6px;">🏫 學生登入班級名冊設定與管理</h3>
+            <p style="color: #555; font-size: 14px;">
+              在此可自由新增、修改或刪除學生登入時的「班級下拉選單」。修改後會立即生效於首頁登入選單與成績篩選列表中。
+            </p>
+          </div>
+
+          <!-- 新增班級表單 -->
+          <div class="add-class-form" style="display:flex; gap:10px; max-width:480px; margin-bottom: 24px;">
+            <input type="text" id="newClassNameInput" class="text-input" placeholder="請輸入新班級名稱（例如：三年二班）" style="flex:1;" />
+            <button class="btn-primary" style="width: auto; padding: 10px 20px; white-space: nowrap;" onclick="adminPanel.addNewClass()">
+              ➕ 新增班級
+            </button>
+          </div>
+
+          <!-- 現有班級標籤列表 -->
+          <div style="font-weight: 800; color: #2e7d32; margin-bottom: 8px;">現有名冊班級清單（點擊 ✕ 可刪除）：</div>
+          <div class="classes-chips-container" id="adminClassesListContainer" style="display:flex; flex-wrap:wrap; gap:12px; margin-bottom:24px;">
+            <!-- 由 adminPanel.renderClassesManagement() 動態渲染 -->
+          </div>
+
+          <div style="border-top: 1px solid #c8e6c9; padding-top: 16px;">
+            <button class="btn-nav-tool" style="color:#c62828;" onclick="adminPanel.resetClassesDefault()">
+              🔄 恢復官方預設班級清單
+            </button>
+          </div>
+        </div>
+
+        <!-- 分頁 3: 遊戲參數調校 -->
+        <div id="settingsTab" class="admin-tab-content hidden">
+          <h3 style="margin-bottom: 16px; color: #1b5e20;">⚙️ 調整遊戲參數與難易度</h3>
+          <div style="max-width: 500px; display: flex; flex-direction: column; gap: 16px;">
+            <div class="field-group">
+              <label for="setInitialHp">玩家初始生命值 (HP)：</label>
+              <input type="number" id="setInitialHp" class="text-input" min="50" max="300" />
+            </div>
+            <div class="field-group">
+              <label for="setWrongPenalty">答錯扣除生命值：</label>
+              <input type="number" id="setWrongPenalty" class="text-input" min="5" max="100" />
+            </div>
+            <div class="field-group">
+              <label for="setTimeLimit">每題作答秒數：</label>
+              <input type="number" id="setTimeLimit" class="text-input" min="10" max="60" />
+            </div>
+            <div class="field-group" style="display:flex; align-items:center; gap:12px; background:#e8f5e9; padding:14px 18px; border-radius:16px; border:2px solid #a5d6a7;">
+              <input type="checkbox" id="setZhuyinMode" style="width:24px; height:24px; cursor:pointer;" />
+              <label for="setZhuyinMode" style="margin:0; cursor:pointer; font-size:15px; color:#1b5e20;">
+                🔤 <strong>開啟低年級注音輔助模式</strong>（題目、選項與觀念解析自動標註注音，方便國小低年級操作解題）
+              </label>
+            </div>
+            <button class="btn-primary" onclick="adminPanel.saveSettings()">💾 儲存所有參數設定</button>
+          </div>
+        </div>
+
+        <!-- 分頁 4: 英雄圖片與文字更換 -->
+        <div id="heroesTab" class="admin-tab-content hidden">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+            <h3 style="color: #1b5e20;">🧙‍♂️ 英雄角色圖片上傳與屬性更換</h3>
+            <button class="btn-nav-tool" onclick="window.heroManager.resetAllToDefault(); adminPanel.renderHeroesManagement();">
+              🔄 恢復全部預設角色與圖片
+            </button>
+          </div>
+          <div class="admin-heroes-grid" id="adminHeroesGrid">
+            <!-- 由 adminPanel.renderHeroesManagement() 渲染 -->
+          </div>
+        </div>
+
+        <!-- 分頁 5: 題庫管理與上傳更新 -->
+        <div id="questionsTab" class="admin-tab-content hidden">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 10px;">
+            <div>
+              <label>篩選關卡：
+                <select id="adminStageFilter" onchange="adminPanel.renderQuestionsManagement()" class="text-input" style="width: auto; padding: 6px 12px; display:inline-block;">
+                  <option value="0">全部題目</option>
+                  <option value="1">第一關：黑金魔法術</option>
+                  <option value="2">第二關：廚餘分類王</option>
+                  <option value="3">第三關：堆肥小勇士</option>
+                </select>
+              </label>
+            </div>
+            <div style="display:flex; gap: 8px;">
+              <button class="btn-nav-tool" onclick="adminPanel.addNewQuestionPrompt()">➕ 新增題目</button>
+              <button class="btn-nav-tool" onclick="adminPanel.exportQuestionsJson()">📤 匯出題庫 (JSON)</button>
+              <label class="btn-nav-tool" style="cursor: pointer;">
+                📥 匯入題庫 (JSON)
+                <input type="file" accept=".json" onchange="adminPanel.importQuestionsJson(this)" style="display:none;" />
+              </label>
+              <button class="btn-nav-tool" style="color:#c62828;" onclick="adminPanel.resetQuestionsDefault()">🔄 恢復官方預設</button>
+            </div>
+          </div>
+
+          <div class="admin-questions-list" id="adminQuestionsList">
+            <!-- 由 adminPanel.renderQuestionsManagement() 渲染 -->
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== 7. 全螢幕投影簡報錯題檢討 MODAL (🌟 HIGHLIGHT) ==================== -->
+  <div id="projectorSlideModal" class="projector-slide-overlay hidden">
+    <!-- 頂部控制列 -->
+    <div class="projector-header-bar">
+      <div class="projector-title-meta">
+        <span class="slide-brand-badge">📽️ 溪洲國小錯題全班精解簡報</span>
+        <span class="slide-tag" id="slideStageTag">第一關</span>
+        <span class="slide-tag" id="slideCategoryTag">類別</span>
+        <span class="slide-error-badge" id="slideErrorBadge">⚠️ 錯誤率統計</span>
+      </div>
+
+      <div class="projector-controls">
+        <span class="slide-page-indicator" id="slidePageIndicator">1 / 10</span>
+        <button class="btn-slide-nav" onclick="adminPanel.prevSlide()" title="鍵盤向左鍵 ←">⬅️ 上一題</button>
+        <button class="btn-slide-nav" onclick="adminPanel.nextSlide()" title="鍵盤向右鍵 → 或 空白鍵">➡️ 下一題</button>
+        <button class="btn-slide-nav" onclick="adminPanel.toggleFullscreen()" title="快捷鍵: F">⛶ 全螢幕</button>
+        <button class="btn-slide-close" onclick="adminPanel.closeProjectorSlideshow()" title="快捷鍵: ESC">✕ 關閉簡報</button>
+      </div>
+    </div>
+
+    <!-- 簡報核心展示卡片 -->
+    <div class="projector-slide-body">
+      <!-- 題目大字標題 -->
+      <div class="slide-question-card">
+        <h2 class="slide-question-stem" id="slideQuestionStem">題目載入中...</h2>
+      </div>
+
+      <!-- 4個選項長條統計 -->
+      <div class="slide-options-grid" id="slideOptionsGrid">
+        <!-- 由 JS 渲染 -->
+      </div>
+
+      <!-- 教師重點解析大方塊 -->
+      <div class="slide-explanation-card" id="slideExplanationContent">
+        <!-- 由 JS 渲染 -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Firebase 10.8.0 雲端資料庫與 Google 驗證 SDK (Compat) -->
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+  <script src="js/firebase-config.js"></script>
+
+  <!-- 引用各模組程式碼 -->
+  <script src="js/audio.js"></script>
+  <script src="js/zhuyin.js"></script>
+  <script src="js/heroes.js"></script>
+  <script src="js/questions.js"></script>
+  <script src="js/game.js"></script>
+  <script src="js/admin.js"></script>
+
+  <script>
+    // 頁面加載啟動
+    window.addEventListener('DOMContentLoaded', () => {
+      // 同步注音按鈕狀態
+      const isZhuyin = window.zhuyinManager.isEnabled();
+      const btnZhuyin = document.getElementById('btnToggleZhuyin');
+      if (btnZhuyin) btnZhuyin.textContent = isZhuyin ? '🔤 注音: 開' : '🔤 注音: 關';
+
+      game.start();
+    });
+
+    function submitLogin() {
+      const name = document.getElementById('studentNameInput').value;
+      const classSelect = document.getElementById('studentClassSelect');
+      const studentClass = classSelect ? classSelect.value : "六年一班";
+      const seatNo = document.getElementById('studentSeatInput').value;
+      game.handleLogin(name, studentClass, seatNo);
+    }
+
+    function toggleZhuyinClick() {
+      const isEnabled = window.zhuyinManager.toggle();
+      const btn = document.getElementById('btnToggleZhuyin');
+      if (btn) btn.textContent = isEnabled ? '🔤 注音: 開' : '🔤 注音: 關';
+
+      // 同步刷新首頁登入、英雄選擇、關卡引導與答題畫面的注音
+      if (window.game) {
+        window.game.applyLoginZhuyin();
+        window.game.renderHeroSelectionList();
+        if (window.game.currentStage) window.game.showStageIntro(window.game.currentStage);
+        window.game.refreshCurrentQuestionView();
+      }
+    }
+
+    function toggleBgmClick() {
+      const isPlaying = window.soundEngine.toggleBGM();
+      const btn = document.getElementById('btnToggleBgm');
+      if (btn) btn.textContent = isPlaying ? '🎵 音樂: 開' : '🎵 音樂: 關';
+    }
+
+    function toggleSoundClick() {
+      const isSound = window.soundEngine.toggleSound();
+      const btn = document.getElementById('btnToggleSound');
+      if (btn) btn.textContent = isSound ? '🔊 音效: 開' : '🔇 音效: 關';
+    }
+  </script>
+</body>
+</html>
