@@ -115,6 +115,17 @@ body {
   color: #795548;
 }
 
+.btn-nav-lobby {
+  background: #fff3e0 !important;
+  border-color: #ffb74d !important;
+  color: #e65100 !important;
+}
+
+.btn-nav-lobby:hover {
+  background: #ffe0b2 !important;
+  transform: translateY(-2px);
+}
+
 /* ==================== 主要應用容器 ==================== */
 .main-wrapper {
   max-width: 1280px;
@@ -647,6 +658,33 @@ body {
 .score-stat-card {
   text-align: center;
   padding: 6px 10px;
+}
+
+/* 側欄底部返回大廳按鈕 (對戰中隨時中斷返回重選英雄) */
+.btn-return-lobby {
+  width: 100%;
+  padding: 8px 12px;
+  background: #ffffff;
+  border: 2px dashed #b0bec5;
+  border-radius: 12px;
+  font-size: 13px;
+  font-weight: 800;
+  color: #546e7a;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  box-shadow: var(--shadow-sm);
+  margin-top: auto;
+}
+
+.btn-return-lobby:hover {
+  background: #ffebee;
+  border-color: #ef5350;
+  color: #c62828;
+  transform: translateY(-1px);
 }
 
 /* 右側主要對戰與題目區 (Right Column) */

@@ -22,6 +22,7 @@
         </div>
       </div>
       <div class="nav-controls">
+        <button class="btn-nav-tool btn-nav-lobby hidden" id="btnNavReturnLobby" onclick="game.confirmReturnLobby()">🏠 返回大廳</button>
         <button class="btn-nav-tool" id="btnToggleZhuyin" onclick="toggleZhuyinClick()">🔤 注音: 開</button>
         <button class="btn-nav-tool" id="btnToggleBgm" onclick="toggleBgmClick()">🎵 音樂: 開</button>
         <button class="btn-nav-tool" id="btnToggleSound" onclick="toggleSoundClick()">🔊 音效: 開</button>
@@ -159,6 +160,11 @@
             <div class="hud-score-val" id="hudScoreVal">0</div>
             <div class="hud-combo-val" id="hudComboVal"></div>
           </div>
+
+          <!-- 返回大廳按鈕 (對戰中中斷返回重選英雄) -->
+          <button class="btn-return-lobby" id="btnReturnLobby" onclick="game.confirmReturnLobby()">
+            🏠 返回大廳 (重選英雄)
+          </button>
         </aside>
 
         <!-- 右側主要對戰與題目區 (Right Column) -->

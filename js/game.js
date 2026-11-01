@@ -82,6 +82,9 @@ class GameManager {
   // 從關主未倒或失敗畫面返回重選英雄
   returnHome() {
     this.stopTimer();
+    const btnNavLobby = document.getElementById('btnNavReturnLobby');
+    if (btnNavLobby) btnNavLobby.classList.add('hidden');
+
     const bossModal = document.getElementById('bossUndefeatedModal');
     if (bossModal) bossModal.classList.add('hidden');
     const gameOverModal = document.getElementById('gameOverModal');
@@ -94,6 +97,31 @@ class GameManager {
       this.renderHeroSelectionList();
     } else {
       this.start();
+    }
+  }
+
+  // 對戰中手動中斷返回大廳重選英雄
+  confirmReturnLobby() {
+    if (confirm("⚠️ 確定要中斷當前戰鬥，返回大廳重新選擇出戰英雄嗎？\n\n（當前關卡將中斷重置，可重新挑選守護英雄出征）")) {
+      window.soundEngine.playClick();
+      this.stopTimer();
+
+      // 復原戰鬥舞台與精靈動畫樣式
+      const heroVisual = document.getElementById('battleHeroVisual');
+      const monsterVisual = document.getElementById('battleMonsterVisual');
+      if (heroVisual) heroVisual.className = 'battle-sprite-center';
+      if (monsterVisual) monsterVisual.className = 'battle-sprite-center';
+
+      // 隱藏頂部返回大廳按鈕
+      const btnNavLobby = document.getElementById('btnNavReturnLobby');
+      if (btnNavLobby) btnNavLobby.classList.add('hidden');
+
+      // 重置當前關卡狀態，保留勇士基本資料 (姓名、班級、座號)
+      this.currentQIndex = 0;
+      this.player.hp = this.player.maxHp || 100;
+
+      this.returnHome();
+      this.showFloatingMessage("已返回大廳，請挑選出戰英雄！");
     }
   }
 
@@ -342,6 +370,9 @@ class GameManager {
     this.currentQIndex = 0;
     this.monsterMaxHp = this.stageQuestions.length * 100;
     this.monsterHp = this.monsterMaxHp;
+
+    const btnNavLobby = document.getElementById('btnNavReturnLobby');
+    if (btnNavLobby) btnNavLobby.classList.remove('hidden');
 
     this.showScreen('gameplayScreen');
     this.renderCurrentQuestion();
@@ -751,6 +782,8 @@ class GameManager {
   // 單關通關處理
   handleStageComplete() {
     window.soundEngine.playFanfare();
+    const btnNavLobby = document.getElementById('btnNavReturnLobby');
+    if (btnNavLobby) btnNavLobby.classList.add('hidden');
 
     if (this.currentStage < 3) {
       // 進入下一關準備
