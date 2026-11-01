@@ -509,7 +509,8 @@ class GameManager {
       heroVisual.innerHTML = window.heroManager.getHeroImageHtml(this.player.hero, 'battle-sprite-hero idle-float');
     }
     if (heroNameTag && this.player.hero) {
-      heroNameTag.innerHTML = `${window.zhuyinManager.annotate(this.player.hero.name)} (Lv.${this.player.level})`;
+      // 依指示移除 (Lv.X) 標示，左側資訊欄已有完整顯示
+      heroNameTag.innerHTML = window.zhuyinManager.annotate(this.player.hero.name);
     }
 
     const monsterNames = ['荒漠混沌怪', '雜質混亂獸', '惡臭失衡魔王'];
@@ -519,7 +520,7 @@ class GameManager {
       monsterVisual.innerHTML = `<div class="monster-figure shake-idle">${monsterIcons[this.currentStage] || '👾'}</div>`;
     }
     if (monsterNameTag) {
-      monsterNameTag.innerHTML = `首領：${window.zhuyinManager.annotate(monsterNames[this.currentStage - 1] || '妖怪')}`;
+      monsterNameTag.innerHTML = window.zhuyinManager.annotate(monsterNames[this.currentStage - 1] || '關主');
     }
   }
 

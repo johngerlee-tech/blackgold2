@@ -660,16 +660,16 @@ body {
   padding: 6px 10px;
 }
 
-/* 側欄底部返回大廳按鈕 (對戰中隨時中斷返回重選英雄) */
+/* 側欄返回大廳按鈕 (緊鄰上方「當前累積總積分」下方) */
 .btn-return-lobby {
   width: 100%;
   padding: 8px 12px;
   background: #ffffff;
   border: 2px dashed #b0bec5;
   border-radius: 12px;
-  font-size: 13px;
+  font-size: 13.5px;
   font-weight: 800;
-  color: #546e7a;
+  color: #455a64;
   cursor: pointer;
   transition: all 0.2s ease;
   display: flex;
@@ -677,7 +677,7 @@ body {
   justify-content: center;
   gap: 6px;
   box-shadow: var(--shadow-sm);
-  margin-top: auto;
+  margin-top: 4px; /* 緊鄰上方「當前累積總積分」下方，消除在 1920*1080 下的過大空隙 */
 }
 
 .btn-return-lobby:hover {
@@ -699,10 +699,9 @@ body {
 }
 
 .compact-arena {
-  flex: 0 0 auto;
-  height: 220px !important;
-  min-height: 210px !important;
-  max-height: 235px !important;
+  flex: 1 1 auto;
+  min-height: 195px !important;
+  max-height: 245px !important;
   margin-bottom: 0 !important;
   padding: 8px 18px !important;
   border-radius: 20px !important;
@@ -723,8 +722,9 @@ body {
 }
 
 .compact-pod {
-  height: 198px !important;
-  max-height: 205px !important;
+  height: 100% !important;
+  min-height: 185px !important;
+  max-height: 230px !important;
   padding: 8px 14px !important;
   border-radius: 18px !important;
   display: flex !important;
@@ -839,12 +839,12 @@ body {
 
 .compact-stem {
   flex: 1;
-  font-size: 16px !important;
-  line-height: 1.45 !important;
+  font-size: clamp(17px, 1.25vw, 19px) !important; /* 題幹放大一級 */
+  line-height: 1.5 !important;
   margin-bottom: 0 !important;
-  padding: 4px 10px !important;
+  padding: 6px 14px !important;
   background: #f9fbe7;
-  border-radius: 10px;
+  border-radius: 12px;
   border: 2px solid #dce775;
   color: #1b5e20;
 }
@@ -898,30 +898,29 @@ body {
   }
 }
 
-/* 選項卡片緊湊化：文字最多三行，上下極窄間距，免滾動捲軸 */
+/* 選項卡片緊湊化：文字放大一級，增加內部文字上下間距，最多三行，美觀自適應免捲軸 */
 .compact-options {
   display: grid !important;
   grid-template-columns: 1fr 1fr !important;
-  gap: 5px !important;
+  gap: 8px !important;
   flex: 0 0 auto !important;
 }
 
 .compact-options .choice-btn {
-  min-height: 38px !important;
-  max-height: 52px !important;
-  padding: 3px 8px !important; /* 文字上下方留極窄間距 */
-  font-size: 14.5px !important;
-  border-radius: 10px !important;
+  min-height: 48px !important;
+  padding: 8px 14px !important; /* 增加字卡內文字上下間距 */
+  font-size: clamp(15.5px, 1.15vw, 17px) !important;
+  border-radius: 12px !important;
   display: flex !important;
   align-items: center !important;
-  gap: 8px !important;
+  gap: 10px !important;
   box-shadow: 0 2px 0 #b0bec5 !important;
 }
 
 .compact-options .choice-letter {
-  width: 24px !important;
-  height: 24px !important;
-  font-size: 13px !important;
+  width: 28px !important;
+  height: 28px !important;
+  font-size: 14.5px !important;
   border-radius: 50% !important;
   flex-shrink: 0 !important;
   display: flex !important;
@@ -930,8 +929,8 @@ body {
 }
 
 .compact-options .choice-text {
-  font-size: 14px !important;
-  line-height: 1.25 !important;
+  font-size: clamp(15.5px, 1.15vw, 17px) !important; /* 選項文字放大一級 */
+  line-height: 1.35 !important;
   text-align: left !important;
   flex: 1;
   display: -webkit-box !important;
