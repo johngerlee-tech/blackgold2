@@ -662,12 +662,12 @@ body {
 
 .compact-arena {
   flex: 0 0 auto;
-  height: 155px !important;
-  min-height: 145px !important;
-  max-height: 165px !important;
+  height: 220px !important;
+  min-height: 210px !important;
+  max-height: 235px !important;
   margin-bottom: 0 !important;
-  padding: 4px 14px !important;
-  border-radius: 16px !important;
+  padding: 8px 18px !important;
+  border-radius: 20px !important;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -681,14 +681,14 @@ body {
   display: grid;
   grid-template-columns: 1fr auto 1fr;
   align-items: center;
-  gap: 12px;
+  gap: 14px;
 }
 
 .compact-pod {
-  height: 140px !important;
-  max-height: 140px !important;
-  padding: 6px 12px !important;
-  border-radius: 16px !important;
+  height: 198px !important;
+  max-height: 205px !important;
+  padding: 8px 14px !important;
+  border-radius: 18px !important;
   display: flex !important;
   flex-direction: column !important;
   justify-content: space-between !important;
@@ -696,50 +696,74 @@ body {
   box-sizing: border-box;
 }
 
-/* 懸浮精靈舞台：DIV圖層懸浮，不因圖片尺寸影響排版方塊高度 */
+/* 舞台精靈展示區：寬敞居中，為出戰英雄與關卡領主提供充足視覺空間 */
+.pod-sprite-stage,
 .pod-floating-stage {
-  position: relative;
+  flex: 1;
   width: 100%;
-  height: 72px;
   display: flex;
   align-items: center;
   justify-content: center;
+  min-height: 125px;
+  position: relative;
   overflow: visible;
 }
 
+.battle-sprite-center,
 .floating-sprite-wrap {
-  position: absolute;
-  bottom: 0;
-  left: 50%;
-  transform: translateX(-50%);
   display: flex;
   align-items: center;
   justify-content: center;
-  pointer-events: none;
-  z-index: 10;
+  position: relative;
+  z-index: 5;
+  transform-origin: center bottom;
 }
 
-.floating-sprite-wrap img,
-.floating-sprite-wrap .battle-sprite-hero {
-  max-height: 75px;
-  max-width: 95px;
-  width: auto;
-  height: auto;
-  object-fit: contain;
-  filter: drop-shadow(0 4px 8px rgba(0,0,0,0.18));
+/* 出戰英雄大尺寸視覺焦點 - 125px*125px，杜絕縮小或消失問題 */
+.battle-sprite-hero,
+.hero-render-svg.battle-sprite-hero,
+.hero-render-img.battle-sprite-hero {
+  width: 125px !important;
+  height: 125px !important;
+  min-width: 125px !important;
+  min-height: 125px !important;
+  max-width: 125px !important;
+  max-height: 125px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  filter: drop-shadow(0 6px 14px rgba(0,0,0,0.2));
+  transform-origin: center bottom;
 }
 
-.floating-sprite-wrap .monster-figure {
-  font-size: 54px !important;
-  line-height: 1;
-  margin: 0;
-  filter: drop-shadow(0 4px 8px rgba(0,0,0,0.2));
+.battle-sprite-hero svg {
+  width: 100% !important;
+  height: 100% !important;
+  display: block !important;
+}
+
+.hero-render-img.battle-sprite-hero {
+  width: 125px !important;
+  height: 125px !important;
+  object-fit: contain !important;
+  filter: drop-shadow(0 6px 14px rgba(0,0,0,0.2));
+}
+
+/* 關卡領主 - 威武震撼大尺寸 (88px) 永不縮小 */
+.monster-figure {
+  font-size: 88px !important;
+  line-height: 1 !important;
+  margin: 0 !important;
+  filter: drop-shadow(0 8px 16px rgba(0,0,0,0.25));
+  transform-origin: center bottom;
+  user-select: none;
+  display: inline-block !important;
 }
 
 .compact-vs {
-  font-size: 15px !important;
-  width: 40px !important;
-  height: 40px !important;
+  font-size: 16px !important;
+  width: 44px !important;
+  height: 44px !important;
   border-width: 2px !important;
 }
 
@@ -748,16 +772,17 @@ body {
 }
 
 .compact-hp-block .battle-hp-bar {
-  height: 12px !important;
+  height: 14px !important;
 }
 
+/* 下半：緊湊題目與選項面板 (縮小高度，空出上方大舞台空間) */
 .compact-q-panel {
-  flex: 1;
-  min-height: 0;
+  flex: 0 0 auto !important;
+  height: auto !important;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
-  padding: 8px 14px !important;
+  justify-content: flex-start;
+  padding: 6px 14px 8px !important;
   margin-bottom: 0 !important;
   border-radius: 16px !important;
   position: relative;
@@ -771,15 +796,15 @@ body {
   justify-content: space-between;
   gap: 10px;
   width: 100%;
-  margin-bottom: 6px;
+  margin-bottom: 5px;
 }
 
 .compact-stem {
   flex: 1;
-  font-size: 17px !important;
-  line-height: 1.6 !important;
+  font-size: 16px !important;
+  line-height: 1.45 !important;
   margin-bottom: 0 !important;
-  padding: 6px 12px !important;
+  padding: 4px 10px !important;
   background: #f9fbe7;
   border-radius: 10px;
   border: 2px solid #dce775;
@@ -792,9 +817,9 @@ body {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 6px 16px;
+  padding: 5px 14px;
   border-radius: 999px;
-  font-size: 16px;
+  font-size: 15px;
   font-weight: 900;
   letter-spacing: 1px;
   animation: popBadgeIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
@@ -835,19 +860,48 @@ body {
   }
 }
 
+/* 選項卡片緊湊化：文字最多三行，上下極窄間距，免滾動捲軸 */
 .compact-options {
   display: grid !important;
   grid-template-columns: 1fr 1fr !important;
-  gap: 6px !important;
-  flex: 1;
-  align-content: stretch;
+  gap: 5px !important;
+  flex: 0 0 auto !important;
 }
 
 .compact-options .choice-btn {
-  min-height: 42px;
-  padding: 6px 12px;
-  font-size: 15px;
-  border-radius: 10px;
+  min-height: 38px !important;
+  max-height: 52px !important;
+  padding: 3px 8px !important; /* 文字上下方留極窄間距 */
+  font-size: 14.5px !important;
+  border-radius: 10px !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  box-shadow: 0 2px 0 #b0bec5 !important;
+}
+
+.compact-options .choice-letter {
+  width: 24px !important;
+  height: 24px !important;
+  font-size: 13px !important;
+  border-radius: 50% !important;
+  flex-shrink: 0 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+.compact-options .choice-text {
+  font-size: 14px !important;
+  line-height: 1.25 !important;
+  text-align: left !important;
+  flex: 1;
+  display: -webkit-box !important;
+  -webkit-line-clamp: 3 !important; /* 文字最多三行排列 */
+  -webkit-box-orient: vertical !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  word-break: break-word;
 }
 
 /* 關主消散倒地動畫 */
