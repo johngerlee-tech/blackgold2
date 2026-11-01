@@ -254,28 +254,26 @@ class GameManager {
     const zm = window.zhuyinManager;
     const isZy = zm && zm.isEnabled();
 
-    // 更新預覽展演大圖區
+    // 更新預覽展演大圖區 (懸浮名稱圖層置於英雄圖案上方，下方直接接出戰按鈕與技能說明)
     const previewArea = document.getElementById('selectedHeroPreview');
     if (previewArea) {
       previewArea.innerHTML = `
         <div class="preview-hero-container">
           <div class="preview-visual" style="background: ${hero.avatarBg}">
+            <div class="preview-hero-floating-name">
+              ${isZy ? zm.annotate(hero.name) : hero.name}
+            </div>
             ${window.heroManager.getHeroImageHtml(hero, 'preview-hero-img pulse-anim')}
             <div class="elemental-badge-floating">${hero.element}</div>
           </div>
           <div class="preview-details">
-            <div class="hero-preview-badge">${isZy ? zm.annotate('當前選定英雄') : '當前選定英雄'}</div>
-            <h2 class="preview-hero-title">${isZy ? zm.annotate(hero.name) : hero.name}</h2>
-            <div class="preview-hero-sub">${isZy ? zm.annotate(hero.title) : hero.title}</div>
-            <p class="preview-hero-quote">${isZy ? zm.annotate(hero.quote) : hero.quote}</p>
-            <p class="preview-hero-desc">${isZy ? zm.annotate(hero.description) : hero.description}</p>
-            <div class="preview-perk-box">
-              <span class="perk-label">${isZy ? zm.annotate('固有被動天賦：') : '固有被動天賦：'}</span>
-              <span class="perk-text">${isZy ? zm.annotate(hero.passiveSkill) : hero.passiveSkill}</span>
-            </div>
             <button class="btn-primary start-adventure-btn" onclick="game.confirmHeroAndStart()">
               ✨ ${isZy ? zm.annotate('召喚此英雄出戰，踏上黑金冒險之路！') : '召喚此英雄出戰，踏上黑金冒險之路！'}
             </button>
+            <div class="preview-perk-box">
+              <span class="perk-label">⚡ ${isZy ? zm.annotate('固有被動天賦：') : '固有被動天賦：'}</span>
+              <span class="perk-text">${isZy ? zm.annotate(hero.passiveSkill) : hero.passiveSkill}</span>
+            </div>
           </div>
         </div>
       `;
@@ -445,10 +443,11 @@ class GameManager {
     const q = this.stageQuestions[this.currentQIndex];
     this.currentQuestion = q;
 
-    // 更新進度與類別標籤
+    // 左側關卡下方題目說明已依需求取消
     const qCountBadge = document.getElementById('qCountBadge');
     if (qCountBadge) {
-      qCountBadge.innerHTML = `題目 ${this.currentQIndex + 1} / ${this.stageQuestions.length} 【${window.zhuyinManager.annotate(q.category)}】`;
+      qCountBadge.innerHTML = '';
+      qCountBadge.style.display = 'none';
     }
 
     // 題目本文 (若啟用注音模式自動產生 <ruby><rt> 標籤)
@@ -492,7 +491,8 @@ class GameManager {
       });
       const qCountBadge = document.getElementById('qCountBadge');
       if (qCountBadge) {
-        qCountBadge.innerHTML = `題目 ${this.currentQIndex + 1} / ${this.stageQuestions.length} 【${window.zhuyinManager.annotate(this.currentQuestion.category)}】`;
+        qCountBadge.innerHTML = '';
+        qCountBadge.style.display = 'none';
       }
       this.updateHud();
     }
